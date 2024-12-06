@@ -260,7 +260,7 @@
 <div id="container">
   <div id="header">
     <div class="title">Air quality in Baltimore after Camp Small fire</div>
-    <p class="description">The map below shows how air quality in the Baltimore area changed after the Camp Small fire began around 5 p.m. on Dec. 5. Use the slider to view the shift in air quality.
+    <p class="description">The map below shows how air quality in the Baltimore area has changed over the last 12 hours, from 10 p.m. Dec. 5 to 10 a.m. Dec. 6. The Camp Small fire began around 5 p.m. Dec. 5. Use the slider to view the shift in air quality.
     </p>
     <div class="legend">
         <span>Good</span>
@@ -286,7 +286,7 @@
       id="slider"
       type="range"
       min="0"
-      max="11"
+      max="12"
       step="0"
       value="0"
     />
@@ -309,7 +309,7 @@
     center: [-76.61246147195635, 39.28929977155901], // starting position [lng, lat]
     zoom: 9,
     maxZoom: 10,
-    minZoom: 3,
+    minZoom: 7,
   });
 
   // Disable scroll zoom
@@ -337,6 +337,7 @@
     "Friday, Dec. 6 at 7 a.m. EST",
     "Friday, Dec. 6 at 8 a.m. EST",
     "Friday, Dec. 6 at 9 a.m. EST",
+    "Friday, Dec. 6 at 10 a.m. EST",
   ];
 
   // Decade files with paths
@@ -358,6 +359,7 @@
     9: "data/12-06-24_7am_aq.geojson", 
     10: "data/12-06-24_8am_aq.geojson", 
     11: "data/12-06-24_9am_aq.geojson", 
+    12: "data/12-06-24_10am_aq.geojson",
   };
 
   // Function to update the GeoJSON source
