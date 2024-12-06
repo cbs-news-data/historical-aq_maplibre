@@ -92,7 +92,7 @@
     width: 20px; /* Width of the thumb */
     height: 20px; /* Height of the thumb */
     border-radius: 10px;
-    background: #a5091e; /* Thumb color */
+    background: #000; /* Thumb color */
     cursor: pointer; /* Cursor on hover */
   }
   #slider:focus {
@@ -186,8 +186,7 @@
   }
     #slider::-webkit-slider-thumb {
       width: 35px;
-      height: 35px;
-      border-radius: 50%;
+      height: 15px;
     }
 
     #slider {
@@ -202,7 +201,7 @@
     #slider-label {
       margin-bottom: 5px;
     }
-  }
+
   #tooltip {
     position: absolute;
     background-color: #fff;
@@ -224,7 +223,7 @@
   }
 
   .play-pause-button {
-    background-color: #a5091e;
+    background-color: #000;
     color: #fff;
     font-family: Proxima Nova, sans-serif;
     font-size: 16px;
@@ -234,9 +233,12 @@
     cursor: pointer;
     transition: background-color 0.3s ease;
     margin-right: 12px;
+    border: 2px solid black;
   }
   .play-pause-button:hover {
-    background-color: #85071b;
+    background-color: #fff;
+    border: 2px solid black;
+    color: black;
   }
 
   .fa-play {
@@ -245,6 +247,7 @@
     position: relative;
     right: 4px;
   }
+
   .source {
     font-family: "proxima-nova", sans-serif;
     color: rgb(130, 130, 130);
@@ -295,7 +298,7 @@
     <a href="https://gispub.epa.gov/airnow/?showlegend=yes&archivedates=07%2F14%2F2024&monitors=none&boundaries=nps%2Fcounty&tab=current&basemap=imagery&showgreencontours=true&xmin=-17214959.082579434&xmax=-4691516.368339485&ymin=2196226.248393591&ymax=7870911.228283567" target="_blank">AirNow</a>
   </div>
 </div>
-<div id="tooltip"></div>
+<!-- <div id="tooltip"></div> -->
 
 <script src="https://unpkg.com/maplibre-gl@2.3.0/dist/maplibre-gl.js"></script>
 <script>
