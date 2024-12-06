@@ -274,20 +274,20 @@
       </div>
   </div>
   <div id="slider-container">
-    <label for="slider" id="slider-label">Thursday, December 5 at XXX p.m. EST</label>
+    <label for="slider" id="slider-label">Thursday, Dec. 5, at 10 p.m. EST</label>
     <div id="slider-wrapper">
       <button id="play-pause" class="play-pause-button">
         <i class="fas fa-play"></i>
       </button>
 
       <input
-        id="slider"
-        type="range"
-        min="1950"
-        max="2020"
-        step="10"
-        value="1950"
-      />
+      id="slider"
+      type="range"
+      min="0"
+      max="11"
+      step="0"
+      value="0"
+    />
     </div>
   </div>
   <div id="map"></div>
@@ -309,7 +309,7 @@
     style:
     "https://raw.githubusercontent.com/go2garret/maps/main/src/assets/json/openStreetMap.json", // Replace with your MapTiler style URL
     center: [-76.61246147195635, 39.28929977155901], // starting position [lng, lat]
-    zoom: 12,
+    zoom: 9,
     maxZoom: 10,
     minZoom: 3,
   });
@@ -320,14 +320,41 @@
   // Add zoom and rotation controls to the map.
   map.addControl(new maplibregl.NavigationControl(), "top-left");
 
+    // Define the slider time range
+    const sliderTimes = [
+    "Thursday, Dec. 5 at 10 p.m. EST",
+    "Thursday, Dec. 5 at 11 p.m. EST",
+    "Friday, Dec. 6 at 12 a.m. EST",
+    "Friday, Dec. 6 at 1 a.m. EST",
+    "Friday, Dec. 6 at 2 a.m. EST",
+    "Friday, Dec. 6 at 3 a.m. EST",
+    "Friday, Dec. 6 at 4 a.m. EST",
+    "Friday, Dec. 6 at 5 a.m. EST",
+    "Friday, Dec. 6 at 6 a.m. EST",
+    "Friday, Dec. 6 at 7 a.m. EST",
+    "Friday, Dec. 6 at 8 a.m. EST",
+    "Friday, Dec. 6 at 9 a.m. EST",
+  ];
+
   // Decade files with paths
-  const decadeFiles = {
-    1950: "data/12-06-24_9am_aq.geojson",
+  const hourFiles = {
+    0: "data/12-05-24_10pm_aq.geojson",
+    1: "data/12-05-24_11pm_aq.geojson",
+    2: "data/12-06-24_12am_aq.geojson",
+    3: "data/12-06-24_1am_aq.geojson", 
+    4: "data/12-06-24_2am_aq.geojson", 
+    5: "data/12-06-24_3am_aq.geojson", 
+    6: "data/12-06-24_4am_aq.geojson", 
+    7: "data/12-06-24_5am_aq.geojson", 
+    8: "data/12-06-24_6am_aq.geojson", 
+    9: "data/12-06-24_7am_aq.geojson", 
+    10: "data/12-06-24_8am_aq.geojson", 
+    11: "data/12-06-24_9am_aq.geojson", 
   };
 
   // Function to update the GeoJSON source
-  const updateGeoJSONSource = (decade) => {
-    fetch(decadeFiles[decade])
+  const updateGeoJSONSource = (hour) => {
+    fetch(hourFiles[hour])
       .then((response) => response.json())
       .then((data) => {
         if (map.getSource("polygon")) {
@@ -422,14 +449,15 @@
 
   // Initial load
   map.on("load", () => {
-    updateGeoJSONSource(1950);
+    updateGeoJSONSource(0);
   });
 
-  // Update map when slider changes
+// Adjust slider label format
+  // Update the slider label and map data
   document.getElementById("slider").addEventListener("input", (event) => {
-    const decade = event.target.value;
-    document.getElementById("slider-label").innerText = `${decade}s`;
-    updateGeoJSONSource(decade);
+    const hour = parseInt(event.target.value);
+    document.getElementById("slider-label").innerText = sliderTimes[hour];
+    updateGeoJSONSource(hour);
   });
 
   // Play/Pause functionality
@@ -445,18 +473,13 @@
     playPauseButton.innerHTML = pauseIcon;
     playInterval = setInterval(() => {
       const slider = document.getElementById("slider");
-      let currentDecade = parseInt(slider.value);
-      if (currentDecade < 2020) {
-        currentDecade += 10;
-        slider.value = currentDecade;
-        document.getElementById(
-          "slider-label"
-        ).textContent = `${currentDecade}s`;
-        updateGeoJSONSource(currentDecade);
+      let currentHour = parseInt(slider.value);
+      if (currentHour < sliderTimes.length - 1) {
+        currentHour += 1;
+        slider.value = currentHour;
+        slider.dispatchEvent(new Event("input")); // Trigger slider update
       } else {
-        clearInterval(playInterval);
-        playPauseButton.innerHTML = playIcon;
-        isPlaying = false;
+        pause();
       }
     }, 2000);
   };
