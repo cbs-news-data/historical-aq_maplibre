@@ -1,0 +1,482 @@
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/maplibre-gl@4.5.0/dist/maplibre-gl.css"
+/>
+<script
+  type="text/javascript"
+  src="https://pym.nprapps.org/pym.v1.min.js"
+></script>
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/maplibre-gl@2.3.0/dist/maplibre-gl.css"
+/>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+/>
+
+<!-- Fonts -->
+<link rel="stylesheet" href="https://use.typekit.net/rdn8fde.css" />
+<style>
+  @font-face {
+    font-family: "Publico Headline";
+    src: url("fonts/PublicoHeadline-Black.woff2") format("woff2"),
+      url("fonts/PublicoHeadline-Black.woff") format("woff");
+  }
+
+  body {
+    margin: 0 !important;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+  #container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+  #header {
+    z-index: 1;
+    max-width: 980px;
+  }
+  .title {
+    font-family: "Publico Headline", Georgia, serif;
+    line-height: 34px;
+    font-size: 32px;
+    color: rgb(0, 0, 0);
+  }
+  .description {
+    font-family: "proxima-nova", sans-serif;
+    font-size: 16px;
+    line-height: 1.3;
+    max-width: 980px;
+    margin-top: 12px;
+  }
+  #slider-container {
+    max-width: 980px;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  #slider-label {
+    font-size: 20px;
+    font-family: "proxima-nova", sans-serif;
+    font-weight: bold;
+    margin-bottom: 5px;
+    text-align: center;
+    width: 100%;
+  }
+  #slider-wrapper {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 500px;
+  }
+  #slider {
+    width: calc(100% - 80px); /* Adjusted width to make room for the button */
+    text-align: center;
+    -webkit-appearance: none; /* Override default CSS styles */
+    background: #d4d4d4; /* Slider Track color */
+    border-radius: 50px;
+    height: 10px;
+    margin-right: 10px;
+  }
+  #slider::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Override default CSS styles */
+    appearance: none;
+    width: 20px; /* Width of the thumb */
+    height: 20px; /* Height of the thumb */
+    border-radius: 10px;
+    background: #a5091e; /* Thumb color */
+    cursor: pointer; /* Cursor on hover */
+  }
+  #slider:focus {
+    outline: none; /* Removes the outline */
+  }
+  #map {
+    flex-grow: 1;
+    max-height: 600px;
+    max-width: 980px;
+    margin-bottom: 12px;
+  }
+
+  .legend {
+    display: flex;
+    align-items: center;
+    font-family: "proxima-nova", sans-serif;
+    font-size: 14px;
+    margin-bottom: 5px;
+  }
+  span.legend-title {
+    font-size: 16px;
+    font-family: "proxima-nova", sans-serif;
+  }
+  .legend div {
+    width: 15px;
+    height: 15px;
+    margin-right: 5px;
+    border-radius: 2px;
+  }
+  .legend span {
+    margin-right: 5px;
+    font-family: "proxima-nova", sans-serif;
+  }
+  .good {
+    background-color: #70bb6e;
+  }
+
+  .moderate {
+    background-color: #fde633;
+  }
+  .unhealthy-sg {
+    background-color: #fd8724;
+  }
+  .unhealthy {
+    background-color: #a5091e;
+  }
+  .very-unhealthy {
+    background-color: #8b09a5;
+  }
+  .hazardous {
+    background-color: #876035;
+  }
+  .none {
+    background-color: #cccccc;
+    margin-left: 15px;
+  }
+
+  /* MEDIA QUERY */
+  @media (max-width: 430px) {
+    #map {
+      max-height: 900px !important;
+    }
+    .description {
+      margin-bottom: 5px;
+    }
+
+    .legend {
+      display: flex;
+      align-items: center;
+      font-family: "proxima-nova", sans-serif;
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+    span.legend-title {
+      font-size: 14px;
+      font-family: "proxima-nova", sans-serif;
+    }
+    .legend div {
+      width: 15px;
+      height: 15px;
+      margin-right: 4px;
+      border-radius: 2px;
+    }
+    .legend span {
+      font-family: "proxima-nova", sans-serif;
+    }
+    .none {
+      background-color: #cccccc;
+      margin-left: 10px;
+    }
+  }
+    #slider::-webkit-slider-thumb {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+    }
+
+    #slider {
+      width: 100%;
+      max-width: 500px;
+      text-align: center;
+      -webkit-appearance: none; /* Override default CSS styles */
+      background: #d4d4d4; /* Slider Track color */
+      border-radius: 50px;
+      height: 15px;
+    }
+    #slider-label {
+      margin-bottom: 5px;
+    }
+  }
+  #tooltip {
+    position: absolute;
+    background-color: #fff;
+    padding: 5px;
+    border-radius: 5px;
+    pointer-events: none;
+    display: none;
+    z-index: 1000;
+    font-family: "proxima-nova", sans-serif;
+    max-width: 200px;
+    text-align: left;
+    margin: auto 0;
+    padding: 12px;
+    line-height: 1.4;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  .mapboxgl-ctrl-compass {
+    display: none !important;
+  }
+
+  .play-pause-button {
+    background-color: #a5091e;
+    color: #fff;
+    font-family: Proxima Nova, sans-serif;
+    font-size: 16px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-right: 12px;
+  }
+  .play-pause-button:hover {
+    background-color: #85071b;
+  }
+
+  .fa-play {
+    width: 10px;
+    /* center icon vertically */
+    position: relative;
+    right: 4px;
+  }
+  .source {
+    font-family: "proxima-nova", sans-serif;
+    color: rgb(130, 130, 130);
+    font-size: 14px;
+  }
+
+  
+</style>
+
+<div id="container">
+  <div id="header">
+    <div class="title">Air quality in Baltimore</div>
+    <p class="description">
+      The map below shows TKTK Use the slider to see ...
+    </p>
+    <div class="legend">
+        <span>Good</span>
+        <div class="good"></div>
+        <div class="moderate"></div>
+        <div class="unhealthy-sg"></div>
+        <div class="unhealthy"></div>
+        <div class="very-unhealthy"></div>
+        <div class="hazardous"></div>
+        <span>Hazardous</span>
+        <div class="none"></div>
+        <span>No data</span>
+      </div>
+  </div>
+  <div id="slider-container">
+    <label for="slider" id="slider-label">Thursday, December 5 at XXX p.m. EST</label>
+    <div id="slider-wrapper">
+      <button id="play-pause" class="play-pause-button">
+        <i class="fas fa-play"></i>
+      </button>
+
+      <input
+        id="slider"
+        type="range"
+        min="1950"
+        max="2020"
+        step="10"
+        value="1950"
+      />
+    </div>
+  </div>
+  <div id="map"></div>
+  <div class="source">
+    Source:
+    <a
+      href="#"
+      target="_blank"
+      >tktk</a
+    >
+  </div>
+</div>
+<div id="tooltip"></div>
+
+<script src="https://unpkg.com/maplibre-gl@2.3.0/dist/maplibre-gl.js"></script>
+<script>
+  const map = new maplibregl.Map({
+    container: "map", // container id
+    style:
+    "https://raw.githubusercontent.com/go2garret/maps/main/src/assets/json/openStreetMap.json", // Replace with your MapTiler style URL
+    center: [-76.61246147195635, 39.28929977155901], // starting position [lng, lat]
+    zoom: 12,
+    maxZoom: 10,
+    minZoom: 3,
+  });
+
+  // Disable scroll zoom
+  map.scrollZoom.disable();
+
+  // Add zoom and rotation controls to the map.
+  map.addControl(new maplibregl.NavigationControl(), "top-left");
+
+  // Decade files with paths
+  const decadeFiles = {
+    1950: "data/12-06-24_9am_aq.geojson",
+  };
+
+  // Function to update the GeoJSON source
+  const updateGeoJSONSource = (decade) => {
+    fetch(decadeFiles[decade])
+      .then((response) => response.json())
+      .then((data) => {
+        if (map.getSource("polygon")) {
+          map.getSource("polygon").setData(data);
+        } else {
+          map.addSource("polygon", {
+            type: "geojson",
+            data: data,
+          });
+
+          map.addLayer({
+            id: "polygon",
+            type: "fill",
+            source: "polygon",
+            layout: {},
+            paint: {
+                "fill-color": [
+            "match",
+            ["get", "gridcode"],
+            1,
+            "#70bb6e",
+            2,
+            "#fde633",
+            3,
+            "#fd8724",
+            4,
+            "#a5091e",
+            5,
+            "#8b09a5",
+            6,
+            "#876035",
+            "#cccccc",
+          ],
+          "fill-opacity": 0.6,
+          }
+            });
+
+          // Add tooltip event listeners
+          map.on("mouseenter", "polygon", (e) => {
+            map.getCanvas().style.cursor = "pointer";
+            const coordinates = e.lngLat;
+
+            // Helper function to capitalize the first letter of each word and hyphenated segments
+            const capitalizeWords = (str) => {
+              if (!str) return str;
+              return str
+                .split(" ")
+                .map((word) =>
+                  word
+                    .split("-")
+                    .map(
+                      (segment) =>
+                        segment.charAt(0).toUpperCase() +
+                        segment.slice(1).toLowerCase()
+                    )
+                    .join("-")
+                )
+                .join(" ");
+            };
+
+            const incidentName = e.features[0].properties.INCIDENT;
+            const fireName = incidentName
+              ? `The <strong>${capitalizeWords(incidentName)} Fire</strong>`
+              : "This fire";
+            const acresBurned = Math.round(
+              e.features[0].properties.GIS_ACRES
+            ).toLocaleString();
+            const fireYear = e.features[0].properties.FIRE_YEAR;
+
+            const description = `${fireName} burned ${acresBurned} acres in ${fireYear}.
+  `;
+
+            tooltip.style.display = "block";
+            tooltip.style.left = `${e.originalEvent.pageX + 10}px`;
+            tooltip.style.top = `${e.originalEvent.pageY + 10}px`;
+            tooltip.innerHTML = description;
+          });
+
+          map.on("mouseleave", "polygon", () => {
+            map.getCanvas().style.cursor = "";
+            tooltip.style.display = "none";
+          });
+
+          map.on("mousemove", "polygon", (e) => {
+            tooltip.style.left = `${e.originalEvent.pageX + 10}px`;
+            tooltip.style.top = `${e.originalEvent.pageY + 10}px`;
+          });
+        }
+      })
+      .catch((error) => console.error("Error loading GeoJSON:", error));
+  };
+
+  // Initial load
+  map.on("load", () => {
+    updateGeoJSONSource(1950);
+  });
+
+  // Update map when slider changes
+  document.getElementById("slider").addEventListener("input", (event) => {
+    const decade = event.target.value;
+    document.getElementById("slider-label").innerText = `${decade}s`;
+    updateGeoJSONSource(decade);
+  });
+
+  // Play/Pause functionality
+  let isPlaying = false;
+  let playInterval;
+
+  const playPauseButton = document.getElementById("play-pause");
+  const playIcon = '<i class="fas fa-play"></i>';
+  const pauseIcon = '<i class="fas fa-pause"></i>';
+
+  const play = () => {
+    isPlaying = true;
+    playPauseButton.innerHTML = pauseIcon;
+    playInterval = setInterval(() => {
+      const slider = document.getElementById("slider");
+      let currentDecade = parseInt(slider.value);
+      if (currentDecade < 2020) {
+        currentDecade += 10;
+        slider.value = currentDecade;
+        document.getElementById(
+          "slider-label"
+        ).textContent = `${currentDecade}s`;
+        updateGeoJSONSource(currentDecade);
+      } else {
+        clearInterval(playInterval);
+        playPauseButton.innerHTML = playIcon;
+        isPlaying = false;
+      }
+    }, 2000);
+  };
+
+  const pause = () => {
+    isPlaying = false;
+    playPauseButton.innerHTML = playIcon;
+    clearInterval(playInterval);
+  };
+
+  playPauseButton.addEventListener("click", () => {
+    if (isPlaying) {
+      pause();
+    } else {
+      play();
+    }
+  });
+
+  document.addEventListener("DOMContentLoaded", function () {
+    var pymChild = new pym.Child();
+    pymChild.sendHeight();
+  });
+</script>
