@@ -256,9 +256,8 @@
 
 <div id="container">
   <div id="header">
-    <div class="title">Air quality in Baltimore</div>
-    <p class="description">
-      The map below shows TKTK Use the slider to see ...
+    <div class="title">Air quality in Baltimore after Camp Small fire</div>
+    <p class="description">The map below shows how air quality in the Baltimore area changed after the Camp Small fire began around 5 p.m. on Dec. 5. Use the slider to view the shift in air quality.
     </p>
     <div class="legend">
         <span>Good</span>
@@ -284,7 +283,7 @@
       id="slider"
       type="range"
       min="0"
-      max="11"
+      max="16"
       step="0"
       value="0"
     />
@@ -292,12 +291,8 @@
   </div>
   <div id="map"></div>
   <div class="source">
-    Source:
-    <a
-      href="#"
-      target="_blank"
-      >tktk</a
-    >
+    Map: Taylor Johnston / CBS News • Source:
+    <a href="https://gispub.epa.gov/airnow/?showlegend=yes&archivedates=07%2F14%2F2024&monitors=none&boundaries=nps%2Fcounty&tab=current&basemap=imagery&showgreencontours=true&xmin=-17214959.082579434&xmax=-4691516.368339485&ymin=2196226.248393591&ymax=7870911.228283567" target="_blank">AirNow</a>
   </div>
 </div>
 <div id="tooltip"></div>
@@ -322,6 +317,11 @@
 
     // Define the slider time range
     const sliderTimes = [
+    // "Thursday, Dec. 5 at 5 p.m. EST",
+    // "Thursday, Dec. 5 at 6 p.m. EST",
+    // "Thursday, Dec. 5 at 7 p.m. EST",
+    // "Thursday, Dec. 5 at 8 p.m. EST",
+    // "Thursday, Dec. 5 at 9 p.m. EST",
     "Thursday, Dec. 5 at 10 p.m. EST",
     "Thursday, Dec. 5 at 11 p.m. EST",
     "Friday, Dec. 6 at 12 a.m. EST",
@@ -338,6 +338,11 @@
 
   // Decade files with paths
   const hourFiles = {
+    // 0: "data/12-05-24_5pm_aq.geojson",
+    // 1: "data/12-05-24_6pm_aq.geojson",
+    // 2: "data/12-05-24_7pm_aq.geojson",
+    // 3: "data/12-05-24_8pm_aq.geojson",
+    // 4: "data/12-05-24_9pm_aq.geojson",
     0: "data/12-05-24_10pm_aq.geojson",
     1: "data/12-05-24_11pm_aq.geojson",
     2: "data/12-06-24_12am_aq.geojson",
